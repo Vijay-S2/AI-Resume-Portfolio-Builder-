@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://Vijay-S2.github.io/AI-Resume-Portfolio-Builder-",
+  "homepage": "https://Vijay-S2.github.io/AI-Resume-Portfolio-Builder-/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
