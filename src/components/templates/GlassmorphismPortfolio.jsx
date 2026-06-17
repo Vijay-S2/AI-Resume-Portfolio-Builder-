@@ -1,4 +1,7 @@
+import { useState } from 'react';
+
 const GlassmorphismPortfolio = ({ data, aiData, themeColor, isPreview }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const name = data.name || 'Your Name';
   const role = data.role || 'Digital Creator';
   const email = data.email || 'email@example.com';
@@ -76,10 +79,37 @@ const GlassmorphismPortfolio = ({ data, aiData, themeColor, isPreview }) => {
   }
 
   return (
-    <div style={{ ...containerStyle, minHeight: '100vh', padding: '40px 20px' }}>
+    <div style={{ ...containerStyle, minHeight: '100vh', padding: '0', overflowX: 'hidden' }}>
+      
+      {/* Sticky Navigation Bar */}
+      <nav className="nav-bar" style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        padding: '16px 24px', background: 'rgba(255, 255, 255, 0.15)',
+        backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+        position: 'sticky', top: 0, zIndex: 100,
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)'
+      }}>
+        <a href="#home" className="nav-brand" style={{ fontSize: '18px', fontWeight: '800', textDecoration: 'none', color: '#fff' }}>
+          {name.split(' ').map(n => n[0]).join('') || 'PORTFOLIO'}
+        </a>
+        <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`} id="nav-menu" style={{ display: 'flex', gap: '20px' }}>
+          <a href="#home" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontWeight: 500, fontSize: '14px', textShadow: '0 1px 2px rgba(0,0,0,0.2)' }}>Home</a>
+          <a href="#skills" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontWeight: 500, fontSize: '14px', textShadow: '0 1px 2px rgba(0,0,0,0.2)' }}>Skills</a>
+          <a href="#projects" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontWeight: 500, fontSize: '14px', textShadow: '0 1px 2px rgba(0,0,0,0.2)' }}>Projects</a>
+          {experience && <a href="#experience" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#fff', textDecoration: 'none', fontWeight: 500, fontSize: '14px', textShadow: '0 1px 2px rgba(0,0,0,0.2)' }}>Experience</a>}
+        </div>
+        <button id="mobile-menu-toggle" className={`menu-toggle ${isMenuOpen ? 'open' : ''}`} onClick={() => setIsMenuOpen(!isMenuOpen)}
+          style={{ display: 'none', flexDirection: 'column', justifyContent: 'space-between', width: '24px', height: '18px', background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}>
+          <span style={{ display: 'block', width: '100%', height: '2px', backgroundColor: '#fff', transition: 'all 0.3s' }}></span>
+          <span style={{ display: 'block', width: '100%', height: '2px', backgroundColor: '#fff', transition: 'all 0.3s' }}></span>
+          <span style={{ display: 'block', width: '100%', height: '2px', backgroundColor: '#fff', transition: 'all 0.3s' }}></span>
+        </button>
+      </nav>
+
       <div style={{ position: 'fixed', inset: 0, backgroundImage: `url(${coverImg})`, backgroundSize: 'cover', opacity: 0.3, filter: 'blur(10px)', zIndex: 0 }}></div>
-      <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-        <div style={{ ...glassStyle, padding: '60px 40px', borderRadius: '24px', textAlign: 'center', marginBottom: '40px' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative', zIndex: 1, padding: '40px 20px' }}>
+        <div id="home" style={{ ...glassStyle, padding: '60px 40px', borderRadius: '24px', textAlign: 'center', marginBottom: '40px' }}>
           {data.profileImage && (
             <img src={data.profileImage} alt={name} style={{ width: '120px', height: '120px', borderRadius: '50%', marginBottom: '20px', border: `3px solid ${accent}` }} />
           )}
@@ -93,7 +123,7 @@ const GlassmorphismPortfolio = ({ data, aiData, themeColor, isPreview }) => {
         </div>
 
         <div style={{ display: 'grid', gap: '40px' }}>
-          <div style={{ ...glassStyle, padding: '40px', borderRadius: '24px' }}>
+          <div id="skills" style={{ ...glassStyle, padding: '40px', borderRadius: '24px' }}>
             <h2 style={{ color: accent, fontSize: '24px', margin: '0 0 25px 0' }}>Expertise</h2>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
               {skills.map((s, i) => (
@@ -102,7 +132,7 @@ const GlassmorphismPortfolio = ({ data, aiData, themeColor, isPreview }) => {
             </div>
           </div>
 
-          <div style={{ ...glassStyle, padding: '40px', borderRadius: '24px' }}>
+          <div id="projects" style={{ ...glassStyle, padding: '40px', borderRadius: '24px' }}>
             <h2 style={{ color: accent, fontSize: '24px', margin: '0 0 25px 0' }}>Projects</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
               {projectItems.map((p, i) => (
@@ -114,8 +144,8 @@ const GlassmorphismPortfolio = ({ data, aiData, themeColor, isPreview }) => {
             </div>
           </div>
 
-          {expBlocks.length > 0 && (
-            <div style={{ ...glassStyle, padding: '40px', borderRadius: '24px' }}>
+          {experience && (
+            <div id="experience" style={{ ...glassStyle, padding: '40px', borderRadius: '24px' }}>
               <h2 style={{ color: accent, fontSize: '24px', margin: '0 0 25px 0' }}>Experience</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {expBlocks.map((exp, i) => (

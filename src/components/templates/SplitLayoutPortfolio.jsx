@@ -1,4 +1,7 @@
+import { useState } from 'react';
+
 const SplitLayoutPortfolio = ({ data, aiData, themeColor, isPreview }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const name = data.name || 'Your Name';
   const role = data.role || 'Digital Creator';
   const email = data.email || 'email@example.com';
@@ -50,28 +53,56 @@ const SplitLayoutPortfolio = ({ data, aiData, themeColor, isPreview }) => {
   }
 
   return (
-    <div style={{ ...baseStyle, maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <div style={{ display: 'flex', flexDirection: 'row', minHeight: '600px' }}>
-        <div style={{ width: '40%', backgroundImage: `url(${coverImg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+    <div style={{ ...baseStyle, margin: '0 auto', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+
+      {/* Sticky Navigation Bar */}
+      <nav className="nav-bar" style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        padding: '16px 24px', background: 'rgba(255,255,255,0.92)',
+        backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+        position: 'sticky', top: 0, zIndex: 100,
+        borderBottom: '1px solid rgba(226,232,240,0.8)',
+        boxShadow: '0 2px 12px rgba(0,0,0,0.06)'
+      }}>
+        <a href="#home" className="nav-brand" style={{ fontSize: '18px', fontWeight: '800', textDecoration: 'none', color: primary }}>
+          {name.split(' ').map(n => n[0]).join('') || 'PORTFOLIO'}
+        </a>
+        <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`} id="nav-menu" style={{ display: 'flex', gap: '20px' }}>
+          <a href="#home" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#475569', textDecoration: 'none', fontWeight: 600, fontSize: '14px' }}>Home</a>
+          <a href="#skills" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#475569', textDecoration: 'none', fontWeight: 600, fontSize: '14px' }}>Skills</a>
+          <a href="#projects" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#475569', textDecoration: 'none', fontWeight: 600, fontSize: '14px' }}>Projects</a>
+          {experience && <a href="#experience" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#475569', textDecoration: 'none', fontWeight: 600, fontSize: '14px' }}>Experience</a>}
+          <a href="#contact" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#475569', textDecoration: 'none', fontWeight: 600, fontSize: '14px' }}>Contact</a>
+        </div>
+        <button id="mobile-menu-toggle" className={`menu-toggle ${isMenuOpen ? 'open' : ''}`} onClick={() => setIsMenuOpen(!isMenuOpen)}
+          style={{ display: 'none', flexDirection: 'column', justifyContent: 'space-between', width: '24px', height: '18px', background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}>
+          <span style={{ display: 'block', width: '100%', height: '2px', backgroundColor: primary, transition: 'all 0.3s' }}></span>
+          <span style={{ display: 'block', width: '100%', height: '2px', backgroundColor: primary, transition: 'all 0.3s' }}></span>
+          <span style={{ display: 'block', width: '100%', height: '2px', backgroundColor: primary, transition: 'all 0.3s' }}></span>
+        </button>
+      </nav>
+
+      <div id="home" className="split-layout-header" style={{ display: 'flex', flexDirection: 'row', minHeight: '500px' }}>
+        <div className="split-layout-col-40" style={{ width: '40%', backgroundImage: `url(${coverImg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
           {data.profileImage && (
             <div style={{ padding: '40px' }}>
               <img src={data.profileImage} alt={name} style={{ width: '120px', height: '120px', borderRadius: '50%', border: '4px solid #fff' }} />
             </div>
           )}
         </div>
-        <div style={{ width: '60%', background: primary, color: '#fff', padding: '60px 40px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <h1 style={{ fontSize: '48px', margin: '0 0 10px 0', lineHeight: '1.1' }}>{name}</h1>
-          <div style={{ color: accent, fontSize: '20px', fontWeight: 'bold', marginBottom: '30px' }}>{role}</div>
-          <p style={{ fontSize: '16px', lineHeight: '1.8', opacity: 0.9 }}>{summary}</p>
-          <div style={{ marginTop: '40px', display: 'flex', gap: '20px', fontSize: '14px' }}>
-            <span>{email}</span>
-            <span>{phone}</span>
+        <div className="split-layout-col-60" style={{ width: '60%', background: primary, color: '#fff', padding: 'clamp(30px,5vw,60px) clamp(20px,4vw,40px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <h1 style={{ fontSize: 'clamp(28px,5vw,48px)', margin: '0 0 10px 0', lineHeight: '1.1' }}>{name}</h1>
+          <div style={{ color: accent, fontSize: 'clamp(16px,2vw,20px)', fontWeight: 'bold', marginBottom: '20px' }}>{role}</div>
+          <p style={{ fontSize: 'clamp(13px,1.5vw,16px)', lineHeight: '1.8', opacity: 0.9 }}>{summary}</p>
+          <div id="contact" style={{ marginTop: '30px', display: 'flex', flexWrap: 'wrap', gap: '12px', fontSize: '14px' }}>
+            <a href={`mailto:${email}`} style={{ color: '#fff', opacity: 0.85 }}>{email}</a>
+            <span style={{ opacity: 0.85 }}>{phone}</span>
           </div>
         </div>
       </div>
       
-      <div style={{ display: 'flex', padding: '60px 40px', gap: '40px', background: '#f8fafc' }}>
-        <div style={{ width: '30%' }}>
+      <div id="skills" className="split-layout-body" style={{ display: 'flex', padding: 'clamp(30px,5vw,60px) clamp(20px,4vw,40px)', gap: '40px', background: '#f8fafc' }}>
+        <div className="split-layout-col-30" style={{ width: '30%' }}>
           <h2 style={{ fontSize: '24px', color: primary, marginBottom: '20px', borderBottom: `3px solid ${accent}`, paddingBottom: '10px', display: 'inline-block' }}>Skills</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {skills.map((s, i) => (
@@ -80,13 +111,13 @@ const SplitLayoutPortfolio = ({ data, aiData, themeColor, isPreview }) => {
           </div>
         </div>
         
-        <div style={{ width: '70%' }}>
+        <div id="projects" className="split-layout-col-70" style={{ width: '70%' }}>
           <h2 style={{ fontSize: '24px', color: primary, marginBottom: '20px', borderBottom: `3px solid ${accent}`, paddingBottom: '10px', display: 'inline-block' }}>Featured Projects</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {projectItems.map((p, i) => (
-              <div key={i} style={{ background: '#fff', padding: '30px', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' }}>
-                <h3 style={{ fontSize: '20px', color: primary, margin: '0 0 10px 0' }}>{p.title}</h3>
-                <p style={{ fontSize: '15px', lineHeight: '1.6', margin: 0, color: '#555' }}>{p.desc}</p>
+              <div key={i} style={{ background: '#fff', padding: '24px', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' }}>
+                <h3 style={{ fontSize: '18px', color: primary, margin: '0 0 10px 0' }}>{p.title}</h3>
+                <p style={{ fontSize: '14px', lineHeight: '1.6', margin: 0, color: '#555' }}>{p.desc}</p>
               </div>
             ))}
           </div>
@@ -94,7 +125,7 @@ const SplitLayoutPortfolio = ({ data, aiData, themeColor, isPreview }) => {
       </div>
 
       {experience && (
-        <div style={{ padding: '60px 40px', background: '#fff' }}>
+        <div id="experience" style={{ padding: 'clamp(30px,5vw,60px) clamp(20px,4vw,40px)', background: '#fff' }}>
           <h2 style={{ fontSize: '24px', color: primary, marginBottom: '30px', borderBottom: `3px solid ${accent}`, paddingBottom: '10px', display: 'inline-block' }}>Experience</h2>
           <div style={{ whiteSpace: 'pre-line', fontSize: '15px', lineHeight: '1.8', color: '#444' }}>
             {experience}

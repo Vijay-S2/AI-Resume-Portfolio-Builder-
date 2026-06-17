@@ -1,4 +1,7 @@
+import { useState } from 'react';
+
 const MagazinePortfolio = ({ data, aiData, themeColor, isPreview }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const name = data.name || 'Your Name';
   const role = data.role || 'Digital Creator';
   const email = data.email || 'email@example.com';
@@ -137,7 +140,7 @@ const MagazinePortfolio = ({ data, aiData, themeColor, isPreview }) => {
 
             {/* Experience preview */}
             {expBlocks.length > 0 && (
-              <div style={{ marginTop: '16px' }}>
+              <div id="experience" style={{ marginTop: '56px' }}>
                 <div style={{
                   fontSize: '9px', letterSpacing: '3px', textTransform: 'uppercase', fontWeight: '700',
                   color: accent, marginBottom: '8px'
@@ -153,7 +156,7 @@ const MagazinePortfolio = ({ data, aiData, themeColor, isPreview }) => {
           </div>
 
           {/* Sidebar — Skills & Contact */}
-          <div style={{ padding: '24px 24px 20px', background: `${primary}05`, overflow: 'hidden' }}>
+          <div id="skills" style={{ padding: '24px 24px 20px', background: `${primary}05`, overflow: 'hidden' }}>
             <div style={{
               fontSize: '9px', letterSpacing: '3px', textTransform: 'uppercase', fontWeight: '700',
               color: accent, marginBottom: '12px'
@@ -171,7 +174,7 @@ const MagazinePortfolio = ({ data, aiData, themeColor, isPreview }) => {
 
             {education && (
               <>
-                <div style={{
+                <div id="projects" style={{
                   fontSize: '9px', letterSpacing: '3px', textTransform: 'uppercase', fontWeight: '700',
                   color: accent, marginBottom: '8px'
                 }}>Education</div>
@@ -223,25 +226,34 @@ const MagazinePortfolio = ({ data, aiData, themeColor, isPreview }) => {
       width: '100%', maxWidth: '800px', margin: '0 auto'
     }}>
 
-      {/* ——— EDITORIAL TOP BAR ——— */}
-      <div style={{
+      {/* Sticky Navigation Bar */}
+      <nav className="nav-bar" style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        padding: 'clamp(12px, 2vw, 18px) clamp(20px, 4vw, 40px)',
-        borderBottom: `1px solid ${primary}15`, background: '#fff'
+        padding: '16px 24px', background: 'rgba(255, 255, 255, 0.92)',
+        backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+        position: 'sticky', top: 0, zIndex: 100,
+        borderBottom: '1px solid rgba(226, 232, 240, 0.8)',
+        boxShadow: '0 2px 12px rgba(0,0,0,0.06)'
       }}>
-        <span style={{
-          fontSize: '11px', letterSpacing: '4px', textTransform: 'uppercase',
-          fontWeight: '700', color: accent
-        }}>Portfolio</span>
-        <div style={{ display: 'flex', gap: '20px', fontSize: '11px', color: '#888', letterSpacing: '1px' }}>
-          <span>{email}</span>
-          <span>·</span>
-          <span>{location}</span>
+        <a href="#home" className="nav-brand" style={{ fontSize: '16px', letterSpacing: '4px', textTransform: 'uppercase', fontWeight: '700', textDecoration: 'none', color: accent }}>
+          Portfolio
+        </a>
+        <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`} id="nav-menu" style={{ display: 'flex', gap: '20px' }}>
+          <a href="#home" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#475569', textDecoration: 'none', fontWeight: 600, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px' }}>Home</a>
+          <a href="#projects" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#475569', textDecoration: 'none', fontWeight: 600, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px' }}>Projects</a>
+          {expBlocks.length > 0 && <a href="#experience" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#475569', textDecoration: 'none', fontWeight: 600, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px' }}>Experience</a>}
+          <a href="#skills" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#475569', textDecoration: 'none', fontWeight: 600, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px' }}>Skills</a>
         </div>
-      </div>
+        <button id="mobile-menu-toggle" className={`menu-toggle ${isMenuOpen ? 'open' : ''}`} onClick={() => setIsMenuOpen(!isMenuOpen)}
+          style={{ display: 'none', flexDirection: 'column', justifyContent: 'space-between', width: '24px', height: '18px', background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}>
+          <span style={{ display: 'block', width: '100%', height: '2px', backgroundColor: primary, transition: 'all 0.3s' }}></span>
+          <span style={{ display: 'block', width: '100%', height: '2px', backgroundColor: primary, transition: 'all 0.3s' }}></span>
+          <span style={{ display: 'block', width: '100%', height: '2px', backgroundColor: primary, transition: 'all 0.3s' }}></span>
+        </button>
+      </nav>
 
       {/* ——— HERO ——— */}
-      <div style={{ position: 'relative', overflow: 'hidden' }}>
+      <div id="home" style={{ position: 'relative', overflow: 'hidden' }}>
         <div style={{
           position: 'relative', minHeight: 'clamp(320px, 50vw, 480px)', overflow: 'hidden'
         }}>
@@ -292,7 +304,7 @@ const MagazinePortfolio = ({ data, aiData, themeColor, isPreview }) => {
       </div>
 
       {/* ——— PULL-QUOTE SUMMARY ——— */}
-      <div style={{
+      <div id="summary" style={{
         padding: 'clamp(32px, 6vw, 56px) clamp(24px, 5vw, 48px)',
         background: '#fff', borderBottom: `1px solid ${primary}10`
       }}>
@@ -312,7 +324,7 @@ const MagazinePortfolio = ({ data, aiData, themeColor, isPreview }) => {
       </div>
 
       {/* ——— SKILLS — Editorial Sidebar Style ——— */}
-      <div style={{
+      <div id="skills" style={{
         padding: 'clamp(28px, 5vw, 44px) clamp(24px, 5vw, 48px)',
         background: `${primary}`,
         color: '#fff'
@@ -353,7 +365,7 @@ const MagazinePortfolio = ({ data, aiData, themeColor, isPreview }) => {
       </div>
 
       {/* ——— FEATURED PROJECTS — Magazine Grid ——— */}
-      <div style={{
+      <div id="projects" style={{
         padding: 'clamp(32px, 6vw, 56px) clamp(24px, 5vw, 48px)',
         background: '#faf9f7'
       }}>
@@ -369,7 +381,7 @@ const MagazinePortfolio = ({ data, aiData, themeColor, isPreview }) => {
           </div>
 
           {/* Magazine-style varied grid */}
-          <div style={{
+          <div className="magazine-grid" style={{
             display: 'grid', gridTemplateColumns: '1fr 1fr',
             gap: '16px'
           }}>
@@ -429,7 +441,7 @@ const MagazinePortfolio = ({ data, aiData, themeColor, isPreview }) => {
 
       {/* ——— EXPERIENCE ——— */}
       {expBlocks.length > 0 && (
-        <div style={{
+        <div id="experience" style={{
           padding: 'clamp(32px, 6vw, 56px) clamp(24px, 5vw, 48px)',
           background: '#fff', borderTop: `1px solid ${primary}10`
         }}>

@@ -1,4 +1,7 @@
+import { useState } from 'react';
+
 const CreativePortfolio = ({ data, aiData, themeColor, isPreview }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const name = data.name || 'Your Name';
   const role = data.role || 'Digital Creator';
   const email = data.email || 'email@example.com';
@@ -77,9 +80,49 @@ const CreativePortfolio = ({ data, aiData, themeColor, isPreview }) => {
   // FULL VIEW — completely responsive, no fixed width
   return (
     <div style={{ fontFamily: '"Inter", sans-serif', color: '#1e293b', background: '#f8fafc', width: '100%', maxWidth: '800px', margin: '0 auto' }}>
+      
+      {/* Sticky Navigation Bar */}
+      <nav className="nav-bar" style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        padding: '16px 24px', background: 'rgba(255, 255, 255, 0.85)',
+        backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+        position: 'sticky', top: 0, zIndex: 100,
+        borderBottom: '1px solid rgba(226, 232, 240, 0.8)'
+      }}>
+        <a href="#home" className="nav-brand" style={{
+          fontSize: '18px', fontWeight: '800', textDecoration: 'none',
+          color: primary
+        }}>
+          {name.split(' ').map(n => n[0]).join('') || 'PORTFOLIO'}
+        </a>
+        
+        <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`} id="nav-menu" style={{
+          display: 'flex', gap: '20px'
+        }}>
+          <a href="#home" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#475569', textDecoration: 'none', fontWeight: 600, fontSize: '14px' }}>Home</a>
+          <a href="#skills" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#475569', textDecoration: 'none', fontWeight: 600, fontSize: '14px' }}>Skills</a>
+          <a href="#projects" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#475569', textDecoration: 'none', fontWeight: 600, fontSize: '14px' }}>Projects</a>
+          {experience && <a href="#experience" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#475569', textDecoration: 'none', fontWeight: 600, fontSize: '14px' }}>Experience</a>}
+          <a href="#contact" className="nav-link" onClick={() => setIsMenuOpen(false)} style={{ color: '#475569', textDecoration: 'none', fontWeight: 600, fontSize: '14px' }}>Contact</a>
+        </div>
+
+        <button 
+          id="mobile-menu-toggle"
+          className={`menu-toggle ${isMenuOpen ? 'open' : ''}`} 
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          style={{
+            display: 'none', flexDirection: 'column', justifyContent: 'space-between',
+            width: '24px', height: '18px', background: 'transparent', border: 'none', cursor: 'pointer'
+          }}
+        >
+          <span style={{ display: 'block', width: '100%', height: '2px', backgroundColor: primary, transition: 'all 0.3s' }}></span>
+          <span style={{ display: 'block', width: '100%', height: '2px', backgroundColor: primary, transition: 'all 0.3s' }}></span>
+          <span style={{ display: 'block', width: '100%', height: '2px', backgroundColor: primary, transition: 'all 0.3s' }}></span>
+        </button>
+      </nav>
 
       {/* Hero Section */}
-      <div style={{
+      <div id="home" style={{
         position: 'relative', overflow: 'hidden',
         background: `linear-gradient(135deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.6) 100%), url("${coverImg}")`,
         backgroundSize: 'cover', backgroundPosition: 'center',
@@ -108,7 +151,7 @@ const CreativePortfolio = ({ data, aiData, themeColor, isPreview }) => {
       </div>
 
       {/* Skills */}
-      <div style={{ background: '#fff', padding: 'clamp(24px, 5vw, 48px)', borderBottom: '1px solid #e2e8f0', textAlign: 'center' }}>
+      <div id="skills" style={{ background: '#fff', padding: 'clamp(24px, 5vw, 48px)', borderBottom: '1px solid #e2e8f0', textAlign: 'center' }}>
         <h2 style={{ fontSize: 'clamp(18px, 3vw, 24px)', color: primary, marginBottom: '20px', fontWeight: '800' }}>💡 Expertise</h2>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
           {skills.map((skill, i) => (
@@ -120,7 +163,7 @@ const CreativePortfolio = ({ data, aiData, themeColor, isPreview }) => {
       </div>
 
       {/* Featured Projects */}
-      <div style={{ padding: 'clamp(24px, 5vw, 48px)', background: '#f8fafc' }}>
+      <div id="projects" style={{ padding: 'clamp(24px, 5vw, 48px)', background: '#f8fafc' }}>
         <h2 style={{ fontSize: 'clamp(18px, 3vw, 24px)', color: primary, marginBottom: '24px', fontWeight: '800', textAlign: 'center' }}>🚀 Featured Projects</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))', gap: '16px' }}>
           {projectItems.map((proj, i) => (
@@ -139,7 +182,7 @@ const CreativePortfolio = ({ data, aiData, themeColor, isPreview }) => {
 
       {/* Experience (if provided) */}
       {expBlocks.length > 0 && (
-        <div style={{ padding: 'clamp(24px, 5vw, 48px)', background: '#fff', borderTop: '1px solid #e2e8f0' }}>
+        <div id="experience" style={{ padding: 'clamp(24px, 5vw, 48px)', background: '#fff', borderTop: '1px solid #e2e8f0' }}>
           <h2 style={{ fontSize: 'clamp(18px, 3vw, 24px)', color: primary, marginBottom: '24px', fontWeight: '800', textAlign: 'center' }}>💼 Work Experience</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {expBlocks.map((block, i) => (
@@ -153,7 +196,7 @@ const CreativePortfolio = ({ data, aiData, themeColor, isPreview }) => {
 
       {/* Education (if provided) */}
       {education && (
-        <div style={{ padding: 'clamp(24px, 5vw, 48px)', background: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
+        <div id="education" style={{ padding: 'clamp(24px, 5vw, 48px)', background: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
           <h2 style={{ fontSize: 'clamp(18px, 3vw, 24px)', color: primary, marginBottom: '20px', fontWeight: '800', textAlign: 'center' }}>🎓 Education</h2>
           <div style={{ background: '#fff', borderRadius: '10px', padding: '20px', borderLeft: `4px solid ${primary}` }}>
             <div style={{ fontSize: '14px', lineHeight: '1.7', whiteSpace: 'pre-wrap', color: '#334155' }}>{education}</div>
@@ -162,7 +205,7 @@ const CreativePortfolio = ({ data, aiData, themeColor, isPreview }) => {
       )}
 
       {/* Footer CTA */}
-      <div style={{ background: `linear-gradient(135deg, ${primary}, ${accent})`, padding: 'clamp(28px, 5vw, 48px)', textAlign: 'center', color: '#fff' }}>
+      <div id="contact" style={{ background: `linear-gradient(135deg, ${primary}, ${accent})`, padding: 'clamp(28px, 5vw, 48px)', textAlign: 'center', color: '#fff' }}>
         <h2 style={{ margin: '0 0 12px', fontSize: 'clamp(20px, 4vw, 28px)', fontWeight: '800', color: '#fff' }}>Let's Work Together! 🤝</h2>
         <p style={{ margin: '0 0 20px', fontSize: '15px', opacity: 0.85 }}>Open to exciting opportunities and collaborations.</p>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>

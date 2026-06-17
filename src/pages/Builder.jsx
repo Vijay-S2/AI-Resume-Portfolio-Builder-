@@ -214,12 +214,123 @@ const Builder = () => {
     setIsExporting(true); setShowExportMenu(false);
     try {
       const zip  = new JSZip();
-      const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${formData.name || 'Portfolio'}</title><link rel="stylesheet" href="style.css"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"></head><body>${previewRef.current.innerHTML}</body></html>`;
-      const css  = `body{margin:0;padding:0;font-family:'Inter',sans-serif;background:#f8fafc;display:flex;justify-content:center;min-height:100vh;}`;
+      let rawHtml = previewRef.current.innerHTML;
+      
+      // Package local profile image blob if exists
+      if (formData.profileImage && formData.profileImage.startsWith('blob:')) {
+        try {
+          const imgResponse = await fetch(formData.profileImage);
+          const imgBlob = await imgResponse.blob();
+          
+          // Determine extension
+          let ext = 'jpg';
+          if (imgBlob.type) {
+            const parts = imgBlob.type.split('/');
+            if (parts.length > 1) ext = parts[1];
+          }
+          const filename = `profile_image.${ext}`;
+          
+          // Add image file to the ZIP folder
+          zip.file(filename, imgBlob);
+          
+          // Replace all occurrences of the blob URL in the HTML with the local file path
+          rawHtml = rawHtml.replaceAll(formData.profileImage, `./${filename}`);
+        } catch (imgError) {
+          console.error("Error packaging profile image blob:", imgError);
+        }
+      }
+
+      // Construct standard HTML template wrapped inside a portfolio-root container
+      const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${formData.name || 'Portfolio'}</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cinzel:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="portfolio-root">
+    ${rawHtml}
+  </div>
+</body>
+</html>`;
+
+      const css  = `body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+.portfolio-root {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* =========================================
+   PORTFOLIO RESPONSIVE OVERRIDES
+   ========================================= */
+@media (max-width: 768px) {
+  .portfolio-root {
+    padding: 0;
+  }
+  /* Split Layout Portfolio overrides */
+  .split-layout-header {
+    flex-direction: column !important;
+  }
+  .split-layout-col-40,
+  .split-layout-col-60 {
+    width: 100% !important;
+  }
+  .split-layout-col-40 {
+    min-height: 250px !important;
+  }
+  .split-layout-body {
+    flex-direction: column !important;
+    padding: 30px 20px !important;
+    gap: 30px !important;
+  }
+  .split-layout-col-30,
+  .split-layout-col-70 {
+    width: 100% !important;
+  }
+
+  /* Bento Grid Portfolio overrides */
+  .bento-grid-container {
+    grid-template-columns: 1fr !important;
+    grid-auto-rows: auto !important;
+    padding: 20px 10px !important;
+    gap: 15px !important;
+  }
+  .bento-grid-container > * {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+    padding: 24px !important;
+  }
+
+  /* Magazine Portfolio overrides */
+  .magazine-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .magazine-grid > * {
+    grid-column: span 1 !important;
+  }
+}`;
+
       zip.file('index.html', html.trim());
       zip.file('style.css', css);
-      saveAs(await zip.generateAsync({ type: 'blob' }), `${formData.name || 'portfolio'}_source.zip`);
-    } catch { alert('ZIP Export failed.'); }
+      
+      const zipContent = await zip.generateAsync({ type: 'blob' });
+      saveAs(zipContent, `${formData.name || 'portfolio'}_source.zip`);
+    } catch (error) { 
+      console.error(error);
+      alert('ZIP Export failed.'); 
+    }
     setIsExporting(false);
   };
 
